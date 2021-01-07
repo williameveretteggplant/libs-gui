@@ -2,7 +2,7 @@
 
    <abstract>The button cell class</abstract>
 
-   Copyright (C) 1996-1999 Free Software Foundation, Inc.
+   Copyright (C) 1996-2021 Free Software Foundation, Inc.
 
    Author:  Scott Christley <scottc@net-community.com>
             Ovidiu Predescu <ovidiu@net-community.com>
@@ -1715,10 +1715,24 @@
 		  at: &_keyEquivalentModifierMask];
 	}
 
-      [aCoder encodeValueOfObjCType: @encode(unsigned int)
-              at: &_highlightsByMask];
-      [aCoder encodeValueOfObjCType: @encode(unsigned int)
-              at: &_showAltStateMask];
+      if([NSButtonCell version] <= 3)
+	{
+	  unsigned int tmp2;
+
+	  tmp2 = (unsigned int)_highlightsByMask;
+	  [aCoder encodeValueOfObjCType: @encode(unsigned int)
+				     at: &tmp2];
+	  tmp2 = (unsigned int)_showAltStateMask;
+	  [aCoder encodeValueOfObjCType: @encode(unsigned int)
+				     at: &tmp2];
+	}
+      else
+	{
+	  [aCoder encodeValueOfObjCType: @encode(NSInteger)
+				     at: &_highlightsByMask];
+	  [aCoder encodeValueOfObjCType: @encode(NSInteger)
+				     at: &_showAltStateMask];
+	}
 
       if([NSButtonCell version] >= 2)
 	{
@@ -1902,10 +1916,24 @@
         {
           _keyEquivalentModifierMask = _keyEquivalentModifierMask << 16;
         }
-      [aDecoder decodeValueOfObjCType: @encode(unsigned int)
-                                   at: &_highlightsByMask];
-      [aDecoder decodeValueOfObjCType: @encode(unsigned int)
-                                   at: &_showAltStateMask];
+      if (version <= 3)
+	{
+	  unsigned int tmp2;
+
+	  [aDecoder decodeValueOfObjCType: @encode(unsigned int)
+				       at: &tmp2];
+	  _highlightsByMask = (NSInteger)tmp2;
+	  [aDecoder decodeValueOfObjCType: @encode(unsigned int)
+				       at: &tmp2];
+	  _showAltStateMask = (NSInteger)tmp2;
+	}
+      else
+	{
+	  [aDecoder decodeValueOfObjCType: @encode(NSInteger)
+				       at: &_highlightsByMask];
+	  [aDecoder decodeValueOfObjCType: @encode(NSInteger)
+				       at: &_showAltStateMask];
+	}
 
       if (version >= 2)
         {
