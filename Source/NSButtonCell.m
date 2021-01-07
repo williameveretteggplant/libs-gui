@@ -1715,7 +1715,7 @@
 		  at: &_keyEquivalentModifierMask];
 	}
 
-      if([NSButtonCell version] <= 3)
+      if([NSButtonCell version] <= 4)
 	{
 	  unsigned int tmp2;
 
@@ -1916,7 +1916,7 @@
         {
           _keyEquivalentModifierMask = _keyEquivalentModifierMask << 16;
         }
-      if (version <= 3)
+      if (version <= 4)
 	{
 	  unsigned int tmp2;
 
