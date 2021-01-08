@@ -76,7 +76,7 @@
 + (void) initialize
 {
   if (self == [NSButtonCell class])
-    [self setVersion: 3];
+    [self setVersion: 4];
 }
 
 /*
