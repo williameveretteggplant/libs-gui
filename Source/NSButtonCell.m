@@ -1579,14 +1579,14 @@
  */
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
-  BOOL tmp;
+  BOOL boolTmp;
 
   [super encodeWithCoder: aCoder];
   if ([aCoder allowsKeyedCoding])
     {
       GSButtonCellFlags buttonCellFlags;
-      unsigned int bFlags = 0;
-      unsigned int bFlags2 = 0;
+      uint32_t bFlags = 0;
+      uint32_t bFlags2 = 0;
       NSImage *image = [self image];
       NSButtonImageSource *bi = nil;
 
@@ -1636,7 +1636,7 @@
       buttonCellFlags.isImageSizeDiff = 0;
       buttonCellFlags.drawing = 0;
 
-      memcpy((void *)&bFlags, (void *)&buttonCellFlags,sizeof(unsigned int));
+      memcpy((void *)&bFlags, (void *)&buttonCellFlags,sizeof(uint32_t));
       [aCoder encodeInt: bFlags forKey: @"NSButtonFlags"];
 
       // style and border.
@@ -1699,59 +1699,68 @@
       [aCoder encodeObject: _keyEquivalentFont];
       [aCoder encodeObject: _altContents];
       [aCoder encodeObject: _altImage];
-      tmp = _buttoncell_is_transparent;
+      boolTmp = _buttoncell_is_transparent;
       [aCoder encodeValueOfObjCType: @encode(BOOL)
-              at: &tmp];
+              at: &boolTmp];
 
       if([NSButtonCell version] <= 2)
 	{
-	  unsigned int ke = _keyEquivalentModifierMask << 16;
-	  [aCoder encodeValueOfObjCType: @encode(unsigned int)
+	  uint32_t ke = (uint32_t)(_keyEquivalentModifierMask << 16);
+	  [aCoder encodeValueOfObjCType: @encode(uint32_t)
 		  at: &ke];
 	}
       else
 	{
-	  [aCoder encodeValueOfObjCType: @encode(unsigned int)
-		  at: &_keyEquivalentModifierMask];
+	  uint32_t uintTmp = (uint32_t)_keyEquivalentModifierMask;
+	  [aCoder encodeValueOfObjCType: @encode(uint32_t)
+		  at: &uintTmp];
 	}
 
       if([NSButtonCell version] <= 4)
 	{
-	  unsigned int tmp2;
+	  uint32_t uintTmp;
 
-	  tmp2 = (unsigned int)_highlightsByMask;
-	  [aCoder encodeValueOfObjCType: @encode(unsigned int)
-				     at: &tmp2];
-	  tmp2 = (unsigned int)_showAltStateMask;
-	  [aCoder encodeValueOfObjCType: @encode(unsigned int)
-				     at: &tmp2];
+	  uintTmp = (uint32_t)_highlightsByMask;
+	  [aCoder encodeValueOfObjCType: @encode(uint32_t)
+				     at: &uintTmp];
+	  uintTmp = (uint32_t)_showAltStateMask;
+	  [aCoder encodeValueOfObjCType: @encode(uint32_t)
+				     at: &uintTmp];
 	}
       else
 	{
-	  [aCoder encodeValueOfObjCType: @encode(NSInteger)
-				     at: &_highlightsByMask];
-	  [aCoder encodeValueOfObjCType: @encode(NSInteger)
-				     at: &_showAltStateMask];
+	  int32_t intTmp;
+
+	  intTmp = (int32_t)_highlightsByMask;
+	  [aCoder encodeValueOfObjCType: @encode(int32_t)
+				     at: &intTmp];
+	  intTmp = (int32_t)_showAltStateMask;
+	  [aCoder encodeValueOfObjCType: @encode(int32_t)
+				     at: &intTmp];
 	}
 
       if([NSButtonCell version] >= 2)
 	{
+	  uint32_t uintTmp;
+
 	  [aCoder encodeObject: _sound];
 	  [aCoder encodeObject: _backgroundColor];
 	  [aCoder encodeValueOfObjCType: @encode(float)
 		  at: &_delayInterval];
 	  [aCoder encodeValueOfObjCType: @encode(float)
 		  at: &_repeatInterval];
-	  [aCoder encodeValueOfObjCType: @encode(unsigned int)
-		  at: &_bezel_style];
-	  [aCoder encodeValueOfObjCType: @encode(unsigned int)
-		  at: &_gradient_type];
-	  tmp = _image_dims_when_disabled;
+	  uintTmp = (uint32_t)_bezel_style;
+	  [aCoder encodeValueOfObjCType: @encode(uint32_t)
+		  at: &uintTmp];
+	  uintTmp = (uint32_t)_gradient_type;
+	  [aCoder encodeValueOfObjCType: @encode(uint32_t)
+		  at: &uintTmp];
+	  boolTmp = _image_dims_when_disabled;
 	  [aCoder encodeValueOfObjCType: @encode(BOOL)
-		  at: &tmp];
-	  tmp = _shows_border_only_while_mouse_inside;
+		  at: &boolTmp];
+	  boolTmp = _shows_border_only_while_mouse_inside;
 	  [aCoder encodeValueOfObjCType: @encode(BOOL)
-		  at: &tmp];
+		  at: &boolTmp];
 	}
     }
 }
@@ -1782,9 +1791,9 @@
         }
       if ([aDecoder containsValueForKey: @"NSButtonFlags"])
         {
-          unsigned int bFlags = [aDecoder decodeIntForKey: @"NSButtonFlags"];
+          uint32_t bFlags = [aDecoder decodeIntForKey: @"NSButtonFlags"];
           GSButtonCellFlags buttonCellFlags;
-          memcpy((void *)&buttonCellFlags,(void *)&bFlags,sizeof(struct _GSButtonCellFlags));
+          memcpy((void *)&buttonCellFlags,(void *)&bFlags,sizeof(uint32_t));
 
           [self setTransparent: buttonCellFlags.isTransparent];
           [self setBordered: buttonCellFlags.isBordered];
@@ -1826,7 +1835,7 @@
       if ([aDecoder containsValueForKey: @"NSButtonFlags2"])
         {
 	  NSUInteger imageScale;
-          int bFlags2;
+          uint32_t bFlags2;
 
           bFlags2 = [aDecoder decodeIntForKey: @"NSButtonFlags2"];
           [self setShowsBorderOnlyWhileMouseInside: (bFlags2 & 0x8)];
@@ -1898,7 +1907,9 @@
     }
   else
     {
-      BOOL tmp;
+      BOOL boolTmp;
+      uint32_t uintTmp;
+      int32_t intTmp;
       int version = [aDecoder versionForClassName: @"NSButtonCell"];
       NSString *key = nil;
 
@@ -1908,31 +1919,34 @@
       [aDecoder decodeValueOfObjCType: @encode(id) at: &_keyEquivalentFont];
       [aDecoder decodeValueOfObjCType: @encode(id) at: &_altContents];
       [aDecoder decodeValueOfObjCType: @encode(id) at: &_altImage];
-      [aDecoder decodeValueOfObjCType: @encode(BOOL) at: &tmp];
-      _buttoncell_is_transparent = tmp;
-      [aDecoder decodeValueOfObjCType: @encode(unsigned int)
-                                   at: &_keyEquivalentModifierMask];
+      [aDecoder decodeValueOfObjCType: @encode(BOOL) at: &boolTmp];
+      _buttoncell_is_transparent = boolTmp;
+      [aDecoder decodeValueOfObjCType: @encode(uint32_t)
+                                   at: &uintTmp];
+      _keyEquivalentModifierMask = uintTmp;
+
       if (version <= 2)
         {
           _keyEquivalentModifierMask = _keyEquivalentModifierMask << 16;
         }
       if (version <= 4)
 	{
-	  unsigned int tmp2;
-
-	  [aDecoder decodeValueOfObjCType: @encode(unsigned int)
-				       at: &tmp2];
-	  _highlightsByMask = (NSInteger)tmp2;
-	  [aDecoder decodeValueOfObjCType: @encode(unsigned int)
-				       at: &tmp2];
-	  _showAltStateMask = (NSInteger)tmp2;
+	  [aDecoder decodeValueOfObjCType: @encode(uint32_t)
+				       at: &uintTmp];
+	  _highlightsByMask = (NSInteger)uintTmp;
+	  [aDecoder decodeValueOfObjCType: @encode(uint32_t)
+				       at: &uintTmp];
+	  _showAltStateMask = (NSInteger)uintTmp;
 	}
       else
 	{
-	  [aDecoder decodeValueOfObjCType: @encode(NSInteger)
-				       at: &_highlightsByMask];
-	  [aDecoder decodeValueOfObjCType: @encode(NSInteger)
-				       at: &_showAltStateMask];
+	  [aDecoder decodeValueOfObjCType: @encode(int32_t)
+				       at: &intTmp];
+	  _highlightsByMask = (NSInteger)intTmp;
+	  [aDecoder decodeValueOfObjCType: @encode(int32_t)
+				       at: &intTmp];
+	  _showAltStateMask = (NSInteger)intTmp;
+
 	}
 
       if (version >= 2)
@@ -1941,14 +1955,16 @@
           [aDecoder decodeValueOfObjCType: @encode(id) at: &_backgroundColor];
           [aDecoder decodeValueOfObjCType: @encode(float) at: &_delayInterval];
           [aDecoder decodeValueOfObjCType: @encode(float) at: &_repeatInterval];
+          [aDecoder decodeValueOfObjCType: @encode(uint32_t)
+                                       at: &uintTmp];
+	  _bezel_style = (NSBezelStyle)uintTmp;
           [aDecoder decodeValueOfObjCType: @encode(unsigned int)
-                                       at: &_bezel_style];
-          [aDecoder decodeValueOfObjCType: @encode(unsigned int)
-                                       at: &_gradient_type];
-          [aDecoder decodeValueOfObjCType: @encode(BOOL) at: &tmp];
-          _image_dims_when_disabled = tmp;
-          [aDecoder decodeValueOfObjCType: @encode(BOOL) at: &tmp];
-          _shows_border_only_while_mouse_inside = tmp;
+                                       at: &uintTmp];
+	  _gradient_type = (NSGradientType)uintTmp;
+          [aDecoder decodeValueOfObjCType: @encode(BOOL) at: &boolTmp];
+          _image_dims_when_disabled = boolTmp;
+          [aDecoder decodeValueOfObjCType: @encode(BOOL) at: &boolTmp];
+          _shows_border_only_while_mouse_inside = boolTmp;
         }
       // Not encoded in non-keyed archive
       _imageScaling = NSImageScaleNone;
