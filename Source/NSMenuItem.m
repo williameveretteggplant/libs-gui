@@ -2,7 +2,7 @@
 
    <abstract>The menu cell class.</abstract>
 
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996-2021 Free Software Foundation, Inc.
 
    Author: Ovidiu Predescu <ovidiu@net-community.com>
    Date: May 1997
@@ -612,11 +612,17 @@ static Class imageClass;
     }
   else
     {
+      uint32_t uintTmp;
+      int32_t intTmp;
+
       [aCoder encodeObject: _title];
       [aCoder encodeObject: _keyEquivalent];
-      [aCoder encodeValueOfObjCType: @encode(NSUInteger) at: &_keyEquivalentModifierMask];
-      [aCoder encodeValueOfObjCType: @encode(NSUInteger) at: &_mnemonicLocation];
-      [aCoder encodeValueOfObjCType: @encode(NSInteger) at: &_state];
+      uintTmp = (uint32_t)_keyEquivalentModifierMask;
+      [aCoder encodeValueOfObjCType: @encode(uint32_t) at: &uintTmp];
+      uintTmp = (uint32_t)_mnemonicLocation;
+      [aCoder encodeValueOfObjCType: @encode(uint32_t) at: &uintTmp];
+      intTmp = (int32_t)_state;
+      [aCoder encodeValueOfObjCType: @encode(int32_t) at: &intTmp];
       [aCoder encodeValueOfObjCType: @encode(BOOL) at: &_enabled];
       [aCoder encodeObject: _image];
       [aCoder encodeObject: _onStateImage];
@@ -624,7 +630,8 @@ static Class imageClass;
       [aCoder encodeObject: _mixedStateImage];
       [aCoder encodeValueOfObjCType: @encode(BOOL) at: &_changesState];
       [aCoder encodeValueOfObjCType: @encode(SEL) at: &_action];
-      [aCoder encodeValueOfObjCType: @encode(NSInteger) at: &_tag];
+      intTmp = (int32_t)_tag;
+      [aCoder encodeValueOfObjCType: @encode(NSInteger) at: &intTmp];
       [aCoder encodeConditionalObject: _representedObject];
       [aCoder encodeObject: _submenu];
       [aCoder encodeConditionalObject: _target];
@@ -644,7 +651,7 @@ static Class imageClass;
       NSString *action;
       NSString *key;
       BOOL isSeparator = NO;
-      int keyMask;
+      NSUInteger keyMask;
 
       if ([aDecoder containsValueForKey: @"NSIsSeparator"])
         {
@@ -699,17 +706,17 @@ static Class imageClass;
 
       // Set the key mask regardless of whether it is present;
       // i.e. set it to 0 if it is not present in the nib.
-      keyMask = [aDecoder decodeIntForKey: @"NSKeyEquivModMask"];
+      keyMask = (NSUInteger)[aDecoder decodeIntForKey: @"NSKeyEquivModMask"];
       [self setKeyEquivalentModifierMask: keyMask];
 
       if ([aDecoder containsValueForKey: @"NSMnemonicLoc"])
         {
-          int loc = [aDecoder decodeIntForKey: @"NSMnemonicLoc"];
+          NSUInteger loc = (NSUInteger)[aDecoder decodeIntForKey: @"NSMnemonicLoc"];
           [self setMnemonicLocation: loc];
         }
       if ([aDecoder containsValueForKey: @"NSState"])
         {
-          _state = [aDecoder decodeIntForKey: @"NSState"];
+          _state = (NSInteger)[aDecoder decodeIntForKey: @"NSState"];
         }
       if ([aDecoder containsValueForKey: @"NSIsDisabled"])
         {
@@ -718,24 +725,30 @@ static Class imageClass;
         }
       if ([aDecoder containsValueForKey: @"NSTag"])
         {
-          int tag = [aDecoder decodeIntForKey: @"NSTag"];
+          NSInteger tag = (NSInteger)[aDecoder decodeIntForKey: @"NSTag"];
           [self setTag: tag];
         }
     }
   else
     {
+      uint32_t uintTmp;
+      int32_t intTmp;
+      
       int version = [aDecoder versionForClassName: 
 				  @"NSMenuItem"];
     
       [aDecoder decodeValueOfObjCType: @encode(id) at: &_title];
       [aDecoder decodeValueOfObjCType: @encode(id) at: &_keyEquivalent];
-      [aDecoder decodeValueOfObjCType: @encode(NSUInteger) at: &_keyEquivalentModifierMask];
+      [aDecoder decodeValueOfObjCType: @encode(uint32_t) at: &uintTmp];
+      _keyEquivalentModifierMask = (NSUInteger)uintTmp;
       if (version <= 3)
         {
           _keyEquivalentModifierMask = _keyEquivalentModifierMask << 16;
         }
-      [aDecoder decodeValueOfObjCType: @encode(NSUInteger) at: &_mnemonicLocation];
-      [aDecoder decodeValueOfObjCType: @encode(NSInteger) at: &_state];
+      [aDecoder decodeValueOfObjCType: @encode(uint32_t) at: &uintTmp];
+      _mnemonicLocation = (NSUInteger)uintTmp;
+      [aDecoder decodeValueOfObjCType: @encode(int32_t) at: &intTmp];
+      _state = (NSInteger)intTmp;
       [aDecoder decodeValueOfObjCType: @encode(BOOL) at: &_enabled];
       [aDecoder decodeValueOfObjCType: @encode(id) at: &_image];
       [aDecoder decodeValueOfObjCType: @encode(id) at: &_onStateImage];
@@ -747,7 +760,8 @@ static Class imageClass;
           _target = [aDecoder decodeObject];
         }
       [aDecoder decodeValueOfObjCType: @encode(SEL) at: &_action];
-      [aDecoder decodeValueOfObjCType: @encode(NSInteger) at: &_tag];
+      [aDecoder decodeValueOfObjCType: @encode(int32_t) at: &intTmp];
+      _tag = (NSInteger)intTmp;
       [aDecoder decodeValueOfObjCType: @encode(id) at: &_representedObject];
       [aDecoder decodeValueOfObjCType: @encode(id) at: &_submenu];
       if (version >= 2)
