@@ -1,7 +1,188 @@
+2021-05-29 Gregory John Casamento <greg.casamento@gmail.com>
+
+	* Headers/AppKit/AppKit.h: Include NSDictionaryController.h
+	* Headers/AppKit/NSDictionaryController.h: Add declaration
+        for NSDictionaryController.
+	* Headers/AppKit/NSKeyValueBinding.h: Add bindings for
+        dictionary controller.
+	* MISSING: NSDictionaryController removed
+	* Source/externs.m: Add definition for notification for
+        strings defined in controller definition.
+	* Source/GNUmakefile: Add NSDictionaryController.[hm]
+	* Source/NSDictionaryController.m: Implementation of
+        NSDictionaryController.
+
+2021-05-20 Gregory John Casamento <greg.casamento@gmail.com>
+
+	* Headers/AppKit/AppKit.h: Add NSStackView.h to header.
+	* Headers/AppKit/NSStackView.h: Header
+	* MISSING: Remove NSStackView from the list and update others.
+	* Source/GNUmakefile: Add NSStackView.[hm] to GNUmakefile.
+	* Source/GSXib5KeyedUnarchiver.m: Add decoders and mappings to decode
+        NSStackView content.
+	* Source/NSStackView.m: Implementation of NSStackView.
+
+2021-05-01 Gregory John Casamento <greg.casamento@gmail.com>
+
+	* Headers/Additions/GNUstepGUI/GSXibLoading.h: Add declaration
+        for customClassNames so that we can use that to collect the names
+        of all of the custom classes and their associations.
+	* Source/GNUmakefile: Remove classes which are not used.
+	* Source/GSXib5KeyedUnarchiver.m: In parserDidStartElement...
+        call isInInterfaceBuilder to determine if we should allocate
+        custom classes.
+	* Source/GSXibLoading.m: Add in code in nibInstantiate which uses
+        [NSClassSwapper isInInterfaceBuilder] to prevent connections
+        from being established if the XIB is being loaded in IB/Gorm.
+
+2021-04-30 Gregory John Casamento <greg.casamento@gmail.com>
+
+	* Headers/Additions/GNUstepGUI/GSModelLoaderFactory.h:
+        Declaration of canReadData: in the GSModelLoader class and
+        declaration of modelLoaderForData: in GSModelLoaderFactory.
+	* Source/GSGModelLoader.m: Prototype method for canReadData:
+        Implementation of modelLoaderForData:.
+	* Source/GSGormLoader.m
+	* Source/GSModelLoaderFactory.m
+	* Source/GSNibLoader.m
+	* Source/GSXibLoader.m: Implement -canReadData: method to
+        determine for each loader if that loader can handle the data
+        passed into it.
+	* Source/NSNib.m: Use of [GSModelLoaderFactory modelLoaderForData:]
+        to more generically implement methods that initialize an archive from
+        archived data since we have no file extention to rely on to identify
+        the archive contents.
+
+2021-04-26  Ivan Vucica  <ivan@vucica.net>
+
+	* ANNOUNCE:
+	* Documentation/ReleaseNotes.gsdoc:
+	* Documentation/news.texi:
+	* NEWS:
+	Updating documentation for the 0.29.0 release.
+	* Version:
+	Bumping requirement to gnustep-base 1.28.0.
+
+2021-04-23 Gregory John Casamento <greg.casamento@gmail.com>
+
+	* Source/Functions.m: QuickFix. Remove unecessary warning
+        about storyboard in NSApplicationMain function.
+
+2021-03-29 Gregory John Casamento <greg.casamento@gmail.com>
+
+	* Source/NSGridView.[hm]: Add implementation of NSGridView.
+	* Source/GSXib5KeyedUnarchiver.m: Add keys to decode NSGridView.
+
+2021-03-27 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSControl.m (-textDidChange:): If there is a binding with
+	continious update, pass on the changed text.
+	* Source/GSXibElement.m: Correct the handling of boolean values in attributes.
+	* Source/GSBindingHelpers.h,
+	* Source/NSKeyValueBinding.m: Prevent recursion when
+	reverseSetValue: is used.
+	* Source/NSTextField.m (-textDidChange:): Remove empty code line.
+
+2021-03-12 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSMenu.m (-_setOwnedByPopUp:): Only update the menu if
+	there is a new popup.
+
+2021-02-21 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSPasteboard.m (-_pasteboardWithTarget:name:): Correct
+	wrong order of arguments to NSMapInsert.
+	* Source/NSPasteboard.m (-generalPasteboard): Simplify
+	implementation.
+
+2021-02-12 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSSearchFieldCell.m: Correct encoding/decoding that was
+	broken in last commit of this file.
+
+2021-02-05 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Resources/Italian.lproj/Localizable.strings,
+	* Resources/Esperanto.lproj/Localizable.strings: Readd BOM which
+	was lost when regenerating these files.
+
+2021-01-22 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSTableView.m (-_numRows): Take column value binding into
+	consideration.
+	* Source/NSTableColumn.m (-setValue:forKey:): Reload table data.
+
+2021-01-22 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSWindow.m (GSOrderedWindows): Don't try to handle
+	already gone windows that may be returned from a slow window manager.
+
+2021-01-16 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/GSHorizontalTypesetter.m: Small cleanups for nerged pull request.
+	* Resources: Regenerate translation files.
+	* Documentation/news.texi,
+	* Version: Updating documentation for the upcoming 0.29.0 release.
+
+2021-01-15 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSControl.m: Change encoding/decoding to protect
+	against differences in integer size.
+
+2021-01-08 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Headers/AppKit/NSComboBoxCell.h: Correct type of instance variables.
+	* Source/GSGuiPrivate.h: Add macros for encoding/decoding.
+	* Source/NSActionCell.m,
+	* Source/NSButtonCell.m,
+	* Source/NSCell.m,
+	* Source/NSComboBoxCell.m,
+	* Source/NSImageCell.m,
+	* Source/NSLevelIndicatorCell.m,
+	* Source/NSPathCell.m,
+	* Source/NSPopUpButtonCell.m,
+	* Source/NSSearchFieldCell.m,
+	* Source/NSSliderCell.m,
+	* Source/NSStepperCell.m: Change encoding/decoding to protect
+	against differences in integer size.
+
+2020-12-13 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSSearchFieldCell.m: Use GSTheme to display the popup.
+
+2020-12-12 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSSearchField.m,
+	* Source/NSSearchFieldCell.m: Small cleanups in formatting and
+	int types.
+
+2020-12-11 Riccardo Mottola <rm@gnu.org>
+
+	* Source/GSToolbarView.m,
+	Use centerScanRect to correct Items frame and avoid flickering.
+
+2020-12-06 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSToolbarFrameworkPrivate.h,
+	* Source/GSToolbarView.m,
+	* Source/NSToolbar.m: Minor changes to format code, remove unused
+	methods and introduce some new helper methods.
+
+2020-11-29 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSMenuView.m (-mouseDown:): Protect against _window going
+	away during tracking.
+
+2020-11-23 Riccardo Mottola <rm@gnu.org>
+
+	* Source/NSPopUpButtonCell.m (release):
+	Use standard setMenu: in release and avoid leaking the Menu. (Proposed by Fred)
+
 2020-11-03 Riccardo Mottola <rm@gnu.org>
 
 	* Source/NSBitmapImageRep+JPEG.m (_JPEGRepresentationWithProperties:):
-	Support greyscape output colorspace in JPEG decompression, fix Alpha output do NO, since JPEGs do not support it.
+	Support greyscape output colorspace in JPEG decompression, fix
+	Alpha output to NO, since JPEGs do not support it.
 
 2020-10-18 Fred Kiefer <FredKiefer@gmx.de>
 

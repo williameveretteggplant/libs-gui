@@ -116,6 +116,7 @@ NSFontManager.m \
 NSFontPanel.m \
 NSForm.m \
 NSFormCell.m \
+NSGridView.m \
 NSGroupTouchBarItem.m \
 NSMagnificationGestureRecognizer.m \
 NSPanGestureRecognizer.m \
@@ -132,6 +133,7 @@ NSSlider.m \
 NSSliderCell.m \
 NSSliderAccessory.m \
 NSSliderTouchBarItem.m \
+NSStackView.m \
 NSStepperTouchBarItem.m \
 NSSwitch.m \
 NSTitlebarAccessoryViewController.m \
@@ -350,7 +352,6 @@ GSXibLoader.m \
 GSXibLoading.m \
 GSXibKeyedUnarchiver.m \
 GSXib5KeyedUnarchiver.m \
-GSXibObjectContainer.m \
 GSHelpAttachment.m 
 
 # Turn off NSMenuItem warning that NSMenuItem conforms to <NSObject>,
@@ -447,6 +448,7 @@ NSGradient.h \
 NSGroupTouchBarItem.h \
 NSGlyphGenerator.h \
 NSGraphicsContext.h \
+NSGridView.h \
 NSHelpPanel.h \
 NSHelpManager.h \
 NSImage.h \
@@ -533,6 +535,7 @@ NSSlider.h \
 NSSliderCell.h \
 NSSliderAccessory.h \
 NSSliderTouchBarItem.h \
+NSStackView.h \
 NSSound.h  \
 NSSpeechRecognizer.h \
 NSSpeechSynthesizer.h \
@@ -658,7 +661,6 @@ GSWindowDecorationView.h \
 GSXibElement.h \
 GSXibLoading.h \
 GSXibKeyedUnarchiver.h \
-GSXibObjectContainer.h \
 GSHelpAttachment.h
 
 libgnustep-gui_HEADER_FILES = ${GUI_HEADERS}

@@ -8,6 +8,10 @@
  Date: 12/28/16
  Modifications:  Fred Kiefer <fredkiefer@gmx.de>
  Date: December 2019
+ Modifications:  Gregory John Casamento <greg.casamento@gmail.com>
+ Integration with Gorm so that XIB files can be loaded and support
+ for other classes/attributes.
+ Date: April 2021
 
  This file is part of the GNUstep GUI Library.
 
@@ -41,6 +45,7 @@
 #import "AppKit/NSCell.h"
 #import "AppKit/NSClipView.h"
 #import "AppKit/NSFormCell.h"
+#import "AppKit/NSGridView.h"
 #import "AppKit/NSImage.h"
 #import "AppKit/NSMatrix.h"
 #import "AppKit/NSMenu.h"
@@ -54,6 +59,7 @@
 #import "AppKit/NSScrollView.h"
 #import "AppKit/NSSliderCell.h"
 #import "AppKit/NSSplitView.h"
+#import "AppKit/NSStackView.h"
 #import "AppKit/NSTableColumn.h"
 #import "AppKit/NSTableHeaderView.h"
 #import "AppKit/NSTableView.h"
@@ -82,26 +88,29 @@ static NSString *ApplicationClass = nil;
 {
   self = [super initWithCoder: coder];
 
-  if (self)
+  if (self != nil)
     {
-      // If we've not set the general application class yet...
-      if (_className && (ApplicationClass == nil) &&
-          ([NSClassFromString(_className) isKindOfClass: [NSApplication class]]))
+      if ([coder allowsKeyedCoding])
         {
-          ASSIGNCOPY(ApplicationClass, _className);
-        }
-
-      _userLabel = [coder decodeObjectForKey: @"userLabel"];
-
-      // Override this one type...
-      if (_userLabel)
-        {
-          if ([@"Application" isEqualToString: _userLabel])
+          // If we've not set the general application class yet...
+          if (_className && (ApplicationClass == nil) &&
+              ([NSClassFromString(_className) isKindOfClass: [NSApplication class]]))
             {
-              if (ApplicationClass == nil)
-                ASSIGN(_className, @"NSApplication");
-              else
-                ASSIGN(_className, ApplicationClass);
+              ASSIGNCOPY(ApplicationClass, _className);
+            }
+          
+          _userLabel = [coder decodeObjectForKey: @"userLabel"];
+          
+          // Override this one type...
+          if (_userLabel)
+            {
+              if ([@"Application" isEqualToString: _userLabel])
+                {
+                  if (ApplicationClass == nil)
+                    ASSIGN(_className, @"NSApplication");
+                  else
+                    ASSIGN(_className, ApplicationClass);
+                }
             }
         }
     }
@@ -201,7 +210,10 @@ static NSArray      *XmlBoolDefaultYes  = nil;
                             @"NSMutableArray", @"allowedToolbarItems",
                             @"NSMutableArray", @"defaultToolbarItems",
                             @"NSMutableArray", @"rowTemplates",
-                            @"NSMutableArray", @"constraints", 
+                            @"NSMutableArray", @"constraints",
+                            @"NSMutableArray", @"rows",
+                            @"NSMutableArray", @"columns",
+                            @"NSMutableArray", @"gridCells",
                             @"NSSegmentItem", @"segment",
                             @"NSCell", @"customCell",
                             @"NSCustomObject5", @"customObject",
@@ -213,7 +225,10 @@ static NSArray      *XmlBoolDefaultYes  = nil;
                             @"IBUserDefinedRuntimeAttribute5", @"userDefinedRuntimeAttribute",
                             @"NSURL", @"url",
                             @"NSLayoutConstraint", @"constraint",
-                            @"NSPageController", @"pagecontroller", // why is pagecontroller capitalized this way?
+                            @"NSPageController", @"pagecontroller", // inconsistent capitalization
+                            @"NSStackViewContainer", @"beginningViews",
+                            @"NSStackViewContainer", @"middleViews",
+                            @"NSStackViewContainer", @"endViews",
                             nil];
           RETAIN(XmlTagToObjectClassMap);
 
@@ -227,7 +242,8 @@ static NSArray      *XmlBoolDefaultYes  = nil;
           RETAIN(ClassNamePrefixes);
 
           XmlReferenceAttributes = [NSArray arrayWithObjects: @"headerView", @"initialItem",
-                                            @"selectedItem", @"firstItem", @"secondItem", nil];
+                                            @"selectedItem", @"firstItem", @"secondItem",
+                                            @"row", @"column", nil];
           RETAIN(XmlReferenceAttributes);
 
           XmlConnectionRecordTags = [NSArray arrayWithObjects: @"action", @"outlet", @"binding", nil];
@@ -287,6 +303,27 @@ static NSArray      *XmlBoolDefaultYes  = nil;
                                            @"string", @"NS.relative",
                                            @"canPropagateSelectedChildViewControllerTitle",
                                                    @"NSTabViewControllerCanPropagateSelectedChildViewControllerTitle",
+                                           @"rowAlignment", @"NSGrid_alignment",  // NSGridView
+                                           @"rowSpacing", @"NSGrid_rowSpacing",
+                                           @"columnSpacing", @"NSGrid_columnSpacing",
+                                           @"hidden", @"NSGrid_hidden",
+                                           @"leadingPadding", @"NSGrid_leadingPadding",
+                                           @"bottomPadding", @"NSGrid_bottomPadding",
+                                           @"trailingPadding", @"NSGrid_trailingPadding",
+                                           @"topPadding", @"NSGrid_topPadding",
+                                           @"width", @"NSGrid_width",
+                                           @"height", @"NSGrid_height",
+                                           @"xPlacement", @"NSGrid_xPlacement",
+                                           @"yPlacement", @"NSGrid_yPlacement",
+                                           @"rows", @"NSGrid_rows",
+                                           @"columns", @"NSGrid_columns",
+                                           @"gridCells", @"NSGrid_cells",
+                                           @"contentView", @"NSGrid_content",
+                                           @"row", @"NSGrid_owningRow",
+                                           @"column", @"NSGrid_owningColumn",
+                                           @"beginningViews", @"NSStackViewBeginningContainer",  // NSStackView
+                                           @"middleViews", @"NSStackViewMiddleContainer",
+                                           @"endViews", @"NSStackViewEndContainer",
                                            nil];
           RETAIN(XmlKeyMapTable);
 
@@ -318,7 +355,8 @@ static NSArray      *XmlBoolDefaultYes  = nil;
                                     @"NSMatrixFlags", @"NSNumCols", @"NSNumRows",
                                     @"NSSharedData", @"NSFlags", @"NSTVFlags",
                                     @"NSDefaultParagraphStyle",
-                                    @"NSpiFlags", nil];
+                                    @"NSpiFlags", @"NSStackViewContainerNonDroppedViews",
+                                    nil];
           RETAIN(XmlKeysDefined);
 
           // These define XML tags (i.e. '<autoresizingMask ...') to an associated decode method...
@@ -335,6 +373,12 @@ static NSArray      *XmlBoolDefaultYes  = nil;
           // decoding the integer flag masks...
           XmlKeyToDecoderSelectorMap =
             [NSDictionary dictionaryWithObjectsAndKeys:
+               @"decodeStackViewNonDroppedViewsForElement:", @"NSStackViewContainerNonDroppedViews",
+               @"decodeDistributionForElement:", @"NSStackViewdistribution",
+               @"decodeOrientationForElement:", @"NSStackViewOrientation",
+               @"decodeXPlacementForElement:", @"NSGrid_xPlacement",
+               @"decodeYPlacementForElement:", @"NSGrid_yPlacement",
+               @"decodeRowAlignmentForElement:", @"NSGrid_alignment",
                @"decodeIntercellSpacingHeightForElement:", @"NSIntercellSpacingHeight",
                @"decodeIntercellSpacingWidthForElement:", @"NSIntercellSpacingWidth",
                @"decodeColumnAutoresizingStyleForElement:", @"NSColumnAutoresizingStyle",
@@ -706,6 +750,9 @@ static NSArray      *XmlBoolDefaultYes  = nil;
   [_IBObjectContainer setElement: _connectionRecords forKey: @"connectionRecords"];
   [_IBObjectContainer setElement: _objectRecords forKey: @"objectRecords"];
   [_IBObjectContainer setElement: _flattenedProperties forKey: @"flattenedProperties"];
+
+  // Hold the dictionary which contains custom class information for Gorm/IB.
+  _customClasses = [[NSMutableArray alloc] initWithCapacity: 10];
 }
 
 - (void)dealloc
@@ -718,7 +765,28 @@ static NSArray      *XmlBoolDefaultYes  = nil;
   RELEASE(_orderedObjects);
   RELEASE(_orderedObjectsDict);
   RELEASE(_resources);
+  RELEASE(_customClasses);
   [super dealloc];
+}
+
+- (NSMutableArray *) customClasses
+{
+  return _customClasses;
+}
+
+- (void) createCustomClassRecordForId: (NSString *)theId
+                      withParentClass: (NSString *)parentClassName
+                       forCustomClass: (NSString *)customClassName
+{
+  if (theId == nil || customClassName == nil)
+    return;
+
+  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                                     theId, @"id",
+                                                   parentClassName, @"parentClassName",
+                                                   customClassName, @"customClassName",nil];
+  [_customClasses addObject: dict];
+  // NSLog(@"theId = %@, parentClassName = %@, customClassName = %@", theId, parentClassName, customClassName);
 }
 
 - (void) parser: (NSXMLParser*)parser
@@ -733,12 +801,22 @@ didStartElement: (NSString*)elementName
       NSMutableDictionary *attributes  = AUTORELEASE([attributeDict mutableCopy]);
       NSString            *className   = nil;
       NSString            *elementType = elementName;
+      NSString            *customClassName = nil;
 
-      if (([@"window" isEqualToString: elementName] == NO) &&
-          ([@"customView" isEqualToString: elementName] == NO) &&
-          ([@"customObject" isEqualToString: elementName] == NO))
+      // If we are in IB we don't want to handle custom classes since they are
+      // not linked into the application.
+      if ([NSClassSwapper isInInterfaceBuilder] == NO)
         {
-          className = [attributes objectForKey: @"customClass"];
+          if (([@"window" isEqualToString: elementName] == NO) &&
+              ([@"customView" isEqualToString: elementName] == NO) &&
+              ([@"customObject" isEqualToString: elementName] == NO))
+            {
+              className = [attributes objectForKey: @"customClass"];
+            }
+        }
+      else
+        {
+          customClassName = [attributes objectForKey: @"customClass"];
         }
 
       if (nil == className)
@@ -761,6 +839,16 @@ didStartElement: (NSString*)elementName
           [attributes setObject: className forKey: @"class"];
         }
 
+      // If we are in IB/Gorm, record the id, custom class name, and parent class name so that
+      // they can be edited.
+      if ([NSClassSwapper isInInterfaceBuilder] == YES)
+        {
+          NSString *ref = [attributeDict objectForKey: @"id"];
+          [self createCustomClassRecordForId: ref
+                             withParentClass: className
+                              forCustomClass: customClassName];
+        }
+      
       if ([attributes objectForKey: @"key"] == nil)
         {
           // Special cases to allow current initWithCoder methods to obtain objects..._IBObjectContainer
@@ -2915,6 +3003,147 @@ didStartElement: (NSString*)elementName
     }
 
   return num;  
+}
+
+- (id) _decodePlacementForObject: (id)obj
+{
+  NSGridRowAlignment alignment = NSGridCellPlacementNone;
+  if ([obj isEqualToString: @"inherited"])
+    {
+      alignment = NSGridCellPlacementInherited;
+    }
+  else if ([obj isEqualToString: @"leading"])
+    {
+      alignment = NSGridCellPlacementLeading;
+    }
+  else if ([obj isEqualToString: @"top"])
+    {
+      alignment = NSGridCellPlacementTop;
+    }
+  else if ([obj isEqualToString: @"trailing"])
+    {
+      alignment = NSGridCellPlacementTrailing;
+    }
+  else if ([obj isEqualToString: @"bottom"])
+    {
+      alignment = NSGridCellPlacementBottom;
+    }
+  else if ([obj isEqualToString: @"center"])
+    {
+      alignment = NSGridCellPlacementCenter;
+    }
+  else if ([obj isEqualToString: @"fill"])
+    {
+      alignment = NSGridCellPlacementFill;
+    }  
+  return [NSNumber numberWithInteger: alignment];
+}
+
+- (id) decodeXPlacementForElement: (GSXibElement *)element
+{
+  id obj = [element attributeForKey: @"xPlacement"];
+  return [self _decodePlacementForObject: obj];
+}
+
+- (id) decodeYPlacementForElement: (GSXibElement *)element
+{
+  id obj = [element attributeForKey: @"yPlacement"];
+  return [self _decodePlacementForObject: obj];
+}
+
+- (id) _decodeOrientationForObject: (id)obj
+{
+  NSLayoutConstraintOrientation orientation = 0L;
+  if ([obj isEqualToString: @"vertical"])
+    {
+      orientation = NSLayoutConstraintOrientationVertical;
+    }
+  else if ([obj isEqualToString: @"horizontal"])
+    {
+      orientation = NSLayoutConstraintOrientationHorizontal;
+    }
+  return [NSNumber numberWithInteger: orientation];
+}
+
+- (id) decodeOrientationForElement: (GSXibElement *)element
+{
+  id obj = [element attributeForKey: @"orientation"];
+  return [self _decodeOrientationForObject: obj];
+}
+
+- (id) _decodeDistributionForObject: (id)obj
+{
+  NSStackViewDistribution d = 0L;
+  if ([obj isEqualToString: @"equalCentering"])
+    {
+      d = NSStackViewDistributionEqualCentering;
+    }
+  else if ([obj isEqualToString: @"equalSpacing"])
+    {
+      d = NSStackViewDistributionEqualSpacing;
+    }
+  else if ([obj isEqualToString: @"fill"])
+    {
+      d = NSStackViewDistributionFill;
+    }
+  else if ([obj isEqualToString: @"fillEqually"])
+    {
+      d = NSStackViewDistributionFillEqually;
+    }
+  else if ([obj isEqualToString: @"fillProportionally"])
+    {
+      d = NSStackViewDistributionFillProportionally;
+    }
+  else if ([obj isEqualToString: @"gravityAreas"])
+    {
+      d = NSStackViewDistributionGravityAreas;
+    }
+  return [NSNumber numberWithInteger: d];
+}
+
+- (id) decodeDistributionForElement: (GSXibElement *)element
+{
+  id obj = [element attributeForKey: @"distribution"];
+  return [self _decodeDistributionForObject: obj];
+}
+
+- (id) decodeRowAlignmentForElement: (GSXibElement *)element
+{
+  id obj = [element attributeForKey: @"rowAlignment"];
+  NSGridRowAlignment alignment = NSGridRowAlignmentNone;
+  if ([obj isEqualToString: @"inherited"])
+    {
+      alignment = NSGridRowAlignmentInherited;
+    }
+  else if ([obj isEqualToString: @"firstBaseline"])
+    {
+      alignment = NSGridRowAlignmentFirstBaseline;
+    }
+  else if ([obj isEqualToString: @"lastBaseline"])
+    {
+      alignment = NSGridRowAlignmentLastBaseline;
+    }
+  else
+    {
+      alignment = NSGridRowAlignmentNone;
+    }
+  return [NSNumber numberWithInteger: alignment];
+}
+
+- (id) decodeStackViewNonDroppedViewsForElement: (GSXibElement *)element
+{
+  NSMutableArray *result = [NSMutableArray array];
+  NSDictionary *elements = [element elements];
+  NSEnumerator *en = [elements objectEnumerator];
+  GSXibElement *e = nil;
+  
+  while ((e = [en nextObject]) != nil)
+    {
+      id o = [self objectForXib: e];
+      [result addObject: o];
+    }
+  
+  return result;
 }
 
 - (id) objectForXib: (GSXibElement*)element
