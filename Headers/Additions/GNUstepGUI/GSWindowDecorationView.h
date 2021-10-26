@@ -50,6 +50,7 @@ Abstract superclass for the top-level view in each window. This view is
 responsible for managing window decorations. Concrete subclasses may do
 this, either directly, or indirectly (by using the backend).
 */
+APPKIT_EXPORT_CLASS
 @interface GSWindowDecorationView : NSView
 {
   NSWindow *window; /* not retained */
@@ -95,6 +96,7 @@ windowNumber will be 0.
 /* Manage window decorations by using the backend functions. This only works
  * on backends that can handle window decorations.
  */
+APPKIT_EXPORT_CLASS
 @interface GSBackendWindowDecorationView : GSWindowDecorationView
 @end
 
@@ -104,6 +106,7 @@ Standard OPENSTEP-ish window decorations.
 */
 @class NSButton;
 
+APPKIT_EXPORT_CLASS
 @interface GSStandardWindowDecorationView : GSWindowDecorationView
 {
   BOOL hasTitleBar, hasResizeBar, hasCloseButton, hasMiniaturizeButton;

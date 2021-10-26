@@ -482,6 +482,7 @@ APPKIT_EXPORT	NSString	*GSThemeWillDeactivateNotification;
   use the appropriate behavior.
   </p>
 */ 
+APPKIT_EXPORT_CLASS
 @interface GSTheme : NSObject
 {
 @private
@@ -1509,9 +1510,11 @@ withRepeatedImage: (NSImage*)image
 @end
 
 // Panels which can be overridden by the theme...
+APPKIT_EXPORT_CLASS
 @interface GSPrintPanel : NSPrintPanel
 @end
 
+APPKIT_EXPORT_CLASS
 @interface GSPageLayout : NSPageLayout
 @end
 

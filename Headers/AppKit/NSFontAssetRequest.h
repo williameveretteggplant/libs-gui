@@ -24,6 +24,7 @@
 
 #ifndef _NSFontAssetRequest_h_GNUSTEP_GUI_INCLUDE
 #define _NSFontAssetRequest_h_GNUSTEP_GUI_INCLUDE
+#import <AppKit/AppKitDefines.h>
 
 #import <Foundation/NSObject.h>
 #import <Foundation/NSProgress.h>
@@ -42,6 +43,7 @@ typedef NSUInteger NSFontAssetRequestOptions;
 
 DEFINE_BLOCK_TYPE(GSFontAssetCompletionHandler, BOOL, NSError*);
 
+APPKIT_EXPORT_CLASS
 @interface NSFontAssetRequest : NSObject <NSProgressReporting>
 
 - (instancetype) initWithFontDescriptors: (NSArray *)fontDescriptors

@@ -28,6 +28,7 @@
 
 #ifndef _GNUstep_H_NSPredicateEditorRowTemplate
 #define _GNUstep_H_NSPredicateEditorRowTemplate
+#import <AppKit/AppKitDefines.h>
 
 #import <Foundation/Foundation.h>
 
@@ -51,6 +52,7 @@ enum {
 };
 typedef NSUInteger NSAttributeType;
 
+APPKIT_EXPORT_CLASS
 @interface NSPredicateEditorRowTemplate : NSObject {
 
 }

@@ -29,7 +29,7 @@
 
 #ifndef _GNUstep_H_NSBitmapImageRep
 #define _GNUstep_H_NSBitmapImageRep
-#import <GNUstepBase/GSVersionMacros.h>
+#import <AppKit/AppKitDefines.h>
 
 #import <AppKit/NSImageRep.h>
 
@@ -122,6 +122,7 @@ APPKIT_EXPORT NSString *NSImageEXIFData; // No GNUstep support yet; for reading 
 
 #endif
 
+APPKIT_EXPORT_CLASS
 @interface NSBitmapImageRep : NSImageRep
 {
   // Attributes
