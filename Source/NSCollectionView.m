@@ -1322,6 +1322,7 @@ static NSString *placeholderItem = nil;
 - (void) setDataSource: (id<NSCollectionViewDataSource>)dataSource
 {
   _dataSource = dataSource;
+  [self reloadData];
 }
 
 /* Configuring the Collection view */
@@ -1333,6 +1334,7 @@ static NSString *placeholderItem = nil;
 
 - (void) setBackgroundView: (NSView *)backgroundView
 {
+  _backgroundView = backgroundView; // weak since view retains this
 }
 
 - (BOOL) backgroundViewScrollsWithContent
@@ -1340,10 +1342,25 @@ static NSString *placeholderItem = nil;
   return _backgroundViewScrollsWithContent;
 }
 
+- (void) setBackgroundViewScrollsWithContent: (BOOL)f
+{
+  _backgroundViewScrollsWithContent = f;
+}
+
 /* Reloading Content */
 
 - (void) reloadData
 {
+  NSInteger ns = [self numberOfSections];
+  NSInteger cs = 0;
+  NSInteger idx[1] = {ns};
+  
+  for (cs = 0; cs < ns; cs++)
+    {
+      NSInteger ni = [self numberOfItemsInSection: cs];
+      NSIndexPath *p = [NSIndexPath indexPathWithIndexes: idx length: ni];
+      NSCollectionViewItem *item = [_dataSource collectionView: self itemForRepresentedObjectAtIndexPath: p];
+    }
 }
 
 - (void) reloadSections: (NSIndexSet *)sections
@@ -1370,12 +1387,26 @@ static NSString *placeholderItem = nil;
 
 - (NSInteger) numberOfSections
 {
-  return 0;
+  NSInteger n = 0;
+
+  if ([_dataSource respondsToSelector: @selector(numberOfsectionsInCollectionView:)])
+    {
+      n = [_dataSource numberOfSectionsInCollectionView: self];
+    }
+  
+  return n;
 }
 
 - (NSInteger) numberOfItemsInSection: (NSInteger)section
 {
-  return 0;
+  NSInteger n = 0;
+
+  // Since this is a required method by the delegate we can assume it's presence
+  // if it is not there, tests on macOS indicate that an unrecognized selector
+  // exception is thrown.
+  n = [_dataSource collectionView: self numberOfItemsInSection: section];
+  
+  return n;
 }
 
 /* Inserting, Moving and Deleting Items */

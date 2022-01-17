@@ -455,6 +455,8 @@ shouldSelectItemsAtIndexPaths: (NSSet *)indexPaths;
 
 - (BOOL) backgroundViewScrollsWithContent;
 
+- (void) setBackgroundViewScrollsWithContent: (BOOL)f;
+
 /* Reloading Content */
 
 - (void) reloadData;
