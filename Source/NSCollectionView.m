@@ -47,6 +47,7 @@
 #import "AppKit/NSGraphics.h"
 #import "AppKit/NSImage.h"
 #import "AppKit/NSKeyValueBinding.h"
+#import "AppKit/NSNib.h"
 #import "AppKit/NSPasteboard.h"
 #import "AppKit/NSWindow.h"
 
@@ -1327,6 +1328,14 @@ static NSString *placeholderItem = nil;
 
 /* Configuring the Collection view */
 
+- (NSNib *) _nibForClass: (Class)cls
+{
+  NSString *clsName = NSStringFromClass(cls);
+  NSNib *nib = [[NSNib alloc] initWithNibNamed: clsName
+                                        bundle: [NSBundle bundleForClass: cls]];
+  return nib;
+}
+
 - (NSView *) backgroundView
 {
   return _backgroundView;
@@ -1353,13 +1362,27 @@ static NSString *placeholderItem = nil;
 {
   NSInteger ns = [self numberOfSections];
   NSInteger cs = 0;
-  NSInteger idx[1] = {ns};
-  
+
   for (cs = 0; cs < ns; cs++)
     {
       NSInteger ni = [self numberOfItemsInSection: cs];
-      NSIndexPath *p = [NSIndexPath indexPathWithIndexes: idx length: ni];
-      NSCollectionViewItem *item = [_dataSource collectionView: self itemForRepresentedObjectAtIndexPath: p];
+      NSInteger ci = 0;
+      
+      for (ci = 0; ci < ni; ci++)
+        {
+          NSIndexPath *p = [NSIndexPath indexPathForRow: ci
+                                              inSection: cs];
+          NSCollectionViewItem *item = [_dataSource collectionView: self itemForRepresentedObjectAtIndexPath: p];
+          NSNib *nib = [self _nibForClass: [item class]];
+          BOOL loaded = [nib instantiateWithOwner: item
+                                  topLevelObjects: NULL];
+          
+          if (loaded)
+            {
+              NSView *v = [item view];
+              NSLog(@"%@",v);
+            }
+        }
     }
 }
 
