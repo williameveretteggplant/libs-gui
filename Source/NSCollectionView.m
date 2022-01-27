@@ -1370,8 +1370,7 @@ static NSString *placeholderItem = nil;
       
       for (ci = 0; ci < ni; ci++)
         {
-          NSIndexPath *p = [NSIndexPath indexPathForRow: ci
-                                              inSection: cs];
+          NSIndexPath *p = nil;
           NSCollectionViewItem *item = [_dataSource collectionView: self itemForRepresentedObjectAtIndexPath: p];
           NSNib *nib = [self _nibForClass: [item class]];
           BOOL loaded = [nib instantiateWithOwner: item

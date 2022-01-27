@@ -230,7 +230,7 @@
 
 - (NSSize) collectionViewContentSize
 {
-  return NSZeroSize;
+  return [_collectionView frame].size;
 }
 
 // Methods to override for specific layouts...

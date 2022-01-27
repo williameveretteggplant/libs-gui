@@ -156,8 +156,6 @@ typedef NSInteger NSCollectionUpdateAction;
 @interface NSCollectionViewLayout : NSObject <NSCoding>
 {
   NSCollectionView *_collectionView; // weak
-  Class _layoutAttributesClass;
-  Class _invalidationContextClass;
   NSSize _collectionViewContentSize;
 }
 
@@ -174,8 +172,10 @@ typedef NSInteger NSCollectionUpdateAction;
 - (NSCollectionView *) collectionView;
 - (void) setCollectionView: (NSCollectionView *)cv;
 
-- (NSSize) collectionViewContentSize;
- 
+@end
+
+@interface NSCollectionViewLayout (NSSubclassingHooks)
+  
 // Methods to override for specific layouts...
 - (void) prepareLayout;
 - (NSArray *) layoutAttributesForElementsInRect: (NSRect)rect;
@@ -205,6 +205,10 @@ typedef NSInteger NSCollectionUpdateAction;
                                   withScrollingVelocity: (NSPoint)velocity; 
 - (NSPoint) targetContentOffsetForProposedContentOffset: (NSPoint)proposedContentOffset;
 
+- (NSSize) collectionViewContentSize;
+@end
+
+@interface NSCollectionViewLayout (NSUpdateSupportHooks)
 
 // Update support
 - (void) prepareForCollectionViewUpdates: (NSArray *)updateItems;
