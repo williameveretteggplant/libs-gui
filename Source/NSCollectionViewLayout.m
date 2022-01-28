@@ -42,8 +42,8 @@
   return nil;
 }
 
-+ (instancetype)layoutAttributesForDecorationViewOfKind:(NSCollectionViewDecorationElementKind)decorationViewKind
-                                              withIndexPath: (NSIndexPath*)indexPath
++ (instancetype)layoutAttributesForDecorationViewOfKind: (NSCollectionViewDecorationElementKind)decorationViewKind
+                                          withIndexPath: (NSIndexPath*)indexPath
 {
   return nil;
 }
