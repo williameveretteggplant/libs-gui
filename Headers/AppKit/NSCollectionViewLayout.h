@@ -188,14 +188,14 @@ typedef NSInteger NSCollectionUpdateAction;
   layoutAttributesForDecorationViewOfKind: (NSCollectionViewDecorationElementKind)elementKind
                               atIndexPath: (NSIndexPath *)indexPath;
 
-- (NSCollectionViewLayoutAttributes *)layoutAttributesForDropTargetAtPoint: (NSPoint)pointInCollectionView;
-- (NSCollectionViewLayoutAttributes *)layoutAttributesForInterItemGapBeforeIndexPath: (NSIndexPath *)indexPath;
+- (NSCollectionViewLayoutAttributes *) layoutAttributesForDropTargetAtPoint: (NSPoint)pointInCollectionView;
+- (NSCollectionViewLayoutAttributes *) layoutAttributesForInterItemGapBeforeIndexPath: (NSIndexPath *)indexPath;
 
-- (BOOL)shouldInvalidateLayoutForBoundsChange: (NSRect)newBounds;
-- (NSCollectionViewLayoutInvalidationContext *)invalidationContextForBoundsChange: (NSRect)newBounds;
+- (BOOL) shouldInvalidateLayoutForBoundsChange: (NSRect)newBounds;
+- (NSCollectionViewLayoutInvalidationContext *) invalidationContextForBoundsChange: (NSRect)newBounds;
 
-- (BOOL)shouldInvalidateLayoutForPreferredLayoutAttributes: (NSCollectionViewLayoutAttributes *)preferredAttributes
-                                    withOriginalAttributes: (NSCollectionViewLayoutAttributes *)originalAttributes;
+- (BOOL) shouldInvalidateLayoutForPreferredLayoutAttributes: (NSCollectionViewLayoutAttributes *)preferredAttributes
+                                     withOriginalAttributes: (NSCollectionViewLayoutAttributes *)originalAttributes;
 
 - (NSCollectionViewLayoutInvalidationContext *)
   invalidationContextForPreferredLayoutAttributes: (NSCollectionViewLayoutAttributes *)preferredAttributes
@@ -206,6 +206,7 @@ typedef NSInteger NSCollectionUpdateAction;
 - (NSPoint) targetContentOffsetForProposedContentOffset: (NSPoint)proposedContentOffset;
 
 - (NSSize) collectionViewContentSize;
+
 @end
 
 @interface NSCollectionViewLayout (NSUpdateSupportHooks)

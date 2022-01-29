@@ -228,10 +228,19 @@
   _collectionView = cv;
 }
 
-- (NSSize) collectionViewContentSize
+
+- (void) encodeWithCoder: (NSCoder *)coder
 {
-  return [_collectionView frame].size;
 }
+
+- (instancetype) initWithCoder: (NSCoder *)coder
+{
+  return self;
+}
+
+@end
+
+@implementation NSCollectionViewLayout (NSSubclassingHooks)
 
 // Methods to override for specific layouts...
 - (void) prepareLayout
@@ -307,6 +316,14 @@
   return NSZeroPoint;  
 }
 
+- (NSSize) collectionViewContentSize
+{
+  return [_collectionView frame].size;
+}
+
+@end
+
+@implementation NSCollectionViewLayout (NSUpdateSupportHooks)
 
 // Update support
 - (void) prepareForCollectionViewUpdates: (NSArray *)updateItems
@@ -395,13 +412,5 @@
   return nil;
 }
 
-- (void) encodeWithCoder: (NSCoder *)coder
-{
-}
-
-- (instancetype) initWithCoder: (NSCoder *)coder
-{
-  return self;
-}
 @end
 
