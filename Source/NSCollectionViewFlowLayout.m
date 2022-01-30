@@ -26,6 +26,17 @@
 
 @implementation NSCollectionViewFlowLayoutInvalidationContext
 
+- (instancetype) init
+{
+  self = [super init];
+  if (self != nil)
+    {
+      _invalidateFlowLayoutAttributes = YES;
+      _invalidateFlowLayoutDelegateMetrics = YES;
+    }
+  return self;
+}
+
 - (void) setInvalidateFlowLayoutDelegateMetrics: (BOOL)flag
 {
   _invalidateFlowLayoutDelegateMetrics = flag;

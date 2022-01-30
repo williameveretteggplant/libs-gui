@@ -121,8 +121,6 @@ typedef NSInteger NSCollectionUpdateAction;
 
 @interface NSCollectionViewLayoutInvalidationContext : NSObject
 {
-  BOOL _invalidateEverything;
-  BOOL _invalidateDataSourceCounts;
   NSPoint _contentOffsetAdjustment; 
   NSSize _contentSizeAdjustment;
   NSSet *_invalidatedItemIndexPaths;
@@ -157,6 +155,7 @@ typedef NSInteger NSCollectionUpdateAction;
 {
   NSCollectionView *_collectionView; // weak
   NSSize _collectionViewContentSize;
+  BOOL _valid;
 }
 
 // Initializers

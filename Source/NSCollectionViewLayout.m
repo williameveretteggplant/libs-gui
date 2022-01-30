@@ -25,6 +25,7 @@
 #import "AppKit/NSCollectionViewLayout.h"
 
 @implementation NSCollectionViewLayoutAttributes
+
 // Initializers
 + (instancetype) layoutAttributesForItemWithIndexPath: (NSIndexPath *)indexPath
 {
@@ -113,9 +114,11 @@
 {
   return self;
 }
+
 @end
 
 @implementation NSCollectionViewUpdateItem
+
 - (NSIndexPath *) indexPathBeforeUpdate
 {
   return _indexPathBeforeUpdate;
@@ -130,10 +133,12 @@
 {
   return _updateAction;
 }
+
 @end
 
 
 @implementation NSCollectionViewLayoutInvalidationContext
+
 // Initializers
 - (void)invalidateItemsAtIndexPaths: (NSSet *)indexPaths
 {
@@ -152,12 +157,12 @@
 // Properties
 - (BOOL) invalidateEverything
 {
-  return _invalidateEverything;
+  return YES;
 }
 
 - (BOOL) invalidateDataSourceCounts
 {
-  return _invalidateDataSourceCounts;
+  return YES;
 }
 
 - (NSSet *) invalidatedItemIndexPaths
@@ -194,6 +199,7 @@
 {
   return _invalidatedDecorationIndexPaths;
 }
+
 @end
 
 @implementation NSCollectionViewLayout
@@ -201,6 +207,8 @@
 // Initializers
 - (void)invalidateLayout
 {
+  _valid = NO;
+  [_collectionView reloadData];
 }
 
 - (void)invalidateLayoutWithContext:(NSCollectionViewLayoutInvalidationContext *)context
@@ -387,7 +395,7 @@
 
 - (NSCollectionViewLayoutAttributes *)
   finalLayoutAttributesForDisappearingDecorationElementOfKind: (NSCollectionViewDecorationElementKind)elementKind
-                                                   atIndexPath: (NSIndexPath *)decorationIndexPath
+                                                  atIndexPath: (NSIndexPath *)decorationIndexPath
 {
   return nil;
 }
