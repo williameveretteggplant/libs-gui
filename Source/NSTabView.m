@@ -92,7 +92,6 @@
   _selected = nil;
   RELEASE(_items);
   RELEASE(_font);
-  RELEASE(_original_nextKeyView);
   [super dealloc];
 }
 
