@@ -77,6 +77,7 @@
       // setup variables  
       ASSIGN(_items, [NSMutableArray array]);
       ASSIGN(_font, [NSFont systemFontOfSize: 0]);
+      _original_nextKeyView = nil;
       _selected = nil;
       //_truncated_label = NO;
     }
@@ -91,6 +92,7 @@
   _selected = nil;
   RELEASE(_items);
   RELEASE(_font);
+  RELEASE(_original_nextKeyView);
   [super dealloc];
 }
 
@@ -738,7 +740,8 @@
 
 - (void) setNextKeyView: (NSView *)nextKeyView
 {
-  _original_nextKeyView = nextKeyView;
+  [_original_nextKeyView autorelease];
+  _original_nextKeyView = [nextKeyView retain];
   if (_selected)
     {
       [[_selected _lastKeyView] setNextKeyView: nextKeyView];
