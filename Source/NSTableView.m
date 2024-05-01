@@ -6211,8 +6211,7 @@ This method is deprecated, use -columnIndexesInRect:. */
     }
   else
     {
-      CGFloat visible_width = [self convertRect: [_super_view bounds] 
-				  fromView: _super_view].size.width;
+      CGFloat visible_width = [_super_view bounds].size.width;
       CGFloat table_width = 0;
 
       if (_numberOfColumns > 0)
