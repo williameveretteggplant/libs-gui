@@ -6163,6 +6163,8 @@ This method is deprecated, use -columnIndexesInRect:. */
 
 - (void) superviewFrameChanged: (NSNotification*)aNotification
 {
+  NSLog(@"New superview width: %2f, _superview_width %2f", [[self superview] bounds].size.width, _superview_width);
+  
   if (_autoresizesAllColumnsToFit == YES)
     {
       CGFloat visible_width = [self convertRect: [_super_view bounds] 
