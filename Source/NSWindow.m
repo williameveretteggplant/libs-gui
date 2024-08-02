@@ -1980,6 +1980,7 @@ titleWithRepresentedFilename(NSString *representedFilename)
           [srv setinputfocus: _windowNum];
         }
       _f.visible = YES;
+      [self displayIfNeeded];
     }
   else if ([self isOneShot])
     {
