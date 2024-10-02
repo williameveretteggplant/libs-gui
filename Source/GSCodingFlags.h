@@ -35,7 +35,7 @@
 
 #import "GNUstepGUI/GSNibLoading.h"
 
-typedef struct _GSCellFlags __attribute__((packed)) 
+typedef struct __attribute__((packed)) _GSCellFlags 
 {
 #if GS_WORDS_BIGENDIAN == 1
   unsigned int        state:1;
@@ -111,7 +111,7 @@ typedef union _GSCellFlagsUnion
   uint32_t    value;
 } GSCellFlagsUnion;
 
-typedef struct _GSCellflags2 __attribute__((packed))
+typedef struct __attribute__((packed)) _GSCellflags2 
 {
 #if GS_WORDS_BIGENDIAN == 1
   unsigned int unused1:1;
@@ -156,7 +156,7 @@ typedef union _GSCellFlags2Union
   uint32_t     value;
 } GSCellFlags2Union;
 
-typedef struct _GSButtonCellFlags __attribute__((packed))
+typedef struct __attribute__((packed)) _GSButtonCellFlags
 {
 #if GS_WORDS_BIGENDIAN == 1
   unsigned int isPushin:1;
@@ -219,7 +219,7 @@ typedef union _GSButtonCellFlagsUnion
   uint32_t          value;
 } GSButtonCellFlagsUnion;
 
-typedef struct _GSButtonCellFlags2 __attribute__((packed))
+typedef struct __attribute__((packed)) _GSButtonCellFlags2
 {
 #if GS_WORDS_BIGENDIAN == 1
   unsigned int	keyEquivalentModifierMask:24;
@@ -244,7 +244,7 @@ typedef union _GSButtonCellFlags2Union
   uint32_t           value;
 } GSButtonCellFlags2Union;
 
-typedef struct _GSvFlags __attribute__((packed))
+typedef struct __attribute__((packed)) _GSvFlags
 {
 #if GS_WORDS_BIGENDIAN == 1
   unsigned int isHidden:1;
@@ -277,7 +277,7 @@ typedef union _GSvFlagsUnion
   uint32_t value;
 } GSvFlagsUnion;
 
-typedef struct _GSTabViewTypeFlags __attribute__((packed))
+typedef struct __attribute__((packed)) _GSTabViewTypeFlags
 {
 #if GS_WORDS_BIGENDIAN == 1
   unsigned int reserved1:1;
@@ -307,7 +307,7 @@ typedef union _GSTabViewTypeFlagsUnion
  * pull the attributes out of the nib that we need to fill
  * in the flags.
  */
-typedef struct _tableViewFlags __attribute__((packed))
+typedef struct __attribute__((packed)) _tableViewFlags
 {
 #if GS_WORDS_BIGENDIAN == 1
   unsigned int columnOrdering:1;
@@ -348,7 +348,7 @@ typedef union _GSWindowTemplateFlagsUnion
   uint32_t               value;
 } GSWindowTemplateFlagsUnion;
 
-typedef struct _GSMatrixFlags __attribute__((packed))
+typedef struct __attribute__((packed)) _GSMatrixFlags
 {
 #if GS_WORDS_BIGENDIAN == 1
   unsigned int isHighlight:1;
