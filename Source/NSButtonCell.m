@@ -326,6 +326,10 @@
  */
 - (void) setAlternateTitle: (NSString*)aString
 {
+  if (aString != nil && ![aString isKindOfClass:[NSString class]]) {
+    NSLog(@"Setting invalid alternateTitle: %@", aString);
+    return;
+  }
   ASSIGNCOPY(_altContents, aString);
 
   if (_control_view)
