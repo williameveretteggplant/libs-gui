@@ -560,8 +560,8 @@ static BOOL menuBarVisible = YES;
     }
 
   if ([newItem title] isEqualToString:@"WaitFor"]) {
-     SEL itemAction = [item action];
-     id itemTarget = [item target];
+     SEL itemAction = [newItem action];
+     id itemTarget = [newItem target];
      NSLog(@"%@ : %@", itemTarget, NSStringFromSelector(itemAction));
   }
   
