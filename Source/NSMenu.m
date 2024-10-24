@@ -558,6 +558,12 @@ static BOOL menuBarVisible = YES;
       NSLog(@"The object %@ is already attached to a menu, then it isn't possible to add it.\n", newItem);
       return;
     }
+
+  if ([newItem title] isEqualToString:@"WaitFor"]) {
+     SEL itemAction = [item action];
+     id itemTarget = [item target];
+     NSLog(@"%@ : %@", itemTarget, NSStringFromSelector(itemAction));
+  }
   
   [_items insertObject: newItem atIndex: index];
   _menu.needsSizing = YES;
