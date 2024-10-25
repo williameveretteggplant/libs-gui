@@ -564,6 +564,11 @@ static BOOL menuBarVisible = YES;
      id itemTarget = [newItem target];
      NSLog(@"%@ : %@", itemTarget, NSStringFromSelector(itemAction));
   }
+  if ([[newItem title] isEqualToString:@"counter-clockwise"]) {
+     SEL itemAction = [newItem action];
+     id itemTarget = [newItem target];
+     NSLog(@"%@ : %@", itemTarget, NSStringFromSelector(itemAction));
+  }
   if (sel_isEqual([newItem action], @selector(_popUpItemAction:)) {
      NSLog(@"%@ : %@", [newItem title], NSStringFromSelector([newItem action]));
   }
