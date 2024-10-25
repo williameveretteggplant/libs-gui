@@ -569,7 +569,7 @@ static BOOL menuBarVisible = YES;
      id itemTarget = [newItem target];
      NSLog(@"%@ : %@", itemTarget, NSStringFromSelector(itemAction));
   }
-  if (sel_isEqual([newItem action], @selector(_popUpItemAction:)) {
+  if (sel_isEqual([newItem action], @selector(_popUpItemAction:))) {
      NSLog(@"%@ : %@", [newItem title], NSStringFromSelector([newItem action]));
   }
   
