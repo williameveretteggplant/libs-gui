@@ -1264,11 +1264,13 @@ static NSImage *_pbc_image[5];
 
           while ((menuItem = [menuItemEnumerator nextObject]) != nil)
             {
-              if (sel_isEqual([menuItem action], @selector(_popUpItemAction:))
-                  && ([menuItem target] != self))
+              if (sel_isEqual([menuItem action], @selector(_popUpItemAction:))) {
+	      
+                if ([menuItem target] != self)
                 {
                   [menuItem setTarget: self];
                 }
+	      }
             }
         }
 
