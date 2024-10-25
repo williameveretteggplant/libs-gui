@@ -559,10 +559,13 @@ static BOOL menuBarVisible = YES;
       return;
     }
 
-  if ([[newItem title] isEqualToString:@"WaitFor"]) {
+  if ([[newItem title] isEqualToString:@"PinchOut"]) {
      SEL itemAction = [newItem action];
      id itemTarget = [newItem target];
      NSLog(@"%@ : %@", itemTarget, NSStringFromSelector(itemAction));
+  }
+  if (sel_isEqual([newItem action], @selector(_popUpItemAction:)) {
+     NSLog(@"%@ : %@", [newItem title], NSStringFromSelector([newItem action]));
   }
   
   [_items insertObject: newItem atIndex: index];
